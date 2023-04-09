@@ -1,124 +1,205 @@
 <?php
-include 'connection.php';
-include 'logfrom.php';
+include 'connection.php'
 ?>
 <!DOCTYPE html>
-<html dir="rtl" lang="ar" >
+<html lang = "en">
 <head>
 	<meta charset="UTF-8">
-	<title>التوحيد و النور</title>
+	<title>cars</title>
 	<link rel="stylesheet" type="text/css" href="style.css">
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@1,300&display=swap" rel="stylesheet">
 </head>
 <body>
 	<div class="header">
 <div class="container">
 	<div class = "navbar">
-			<div class= "logo">
-			<img src="IMG/logo.png" width="125px">
-		</div>
-		<nav class="t1">
+		
+		<div class="show"></div>
+		<nav class="Navbar">
 			<ul>
-				<li> <a href="admin.php">الصفحة الرئيسية</a></li>
-				<li> <a href="Products.php">منتجاتنا</a></li>
-				<li> <a href="admin.php?logout='1'" >تسجيل الخروج</a></li>
-			</ul>
-		</nav>		
-	</div>
+  <li><a class="active" href="index.html">Home</a></li>
+  <li><a href="Products.php">Products</a></li>
+  <li><a href="login.html">Sign in</a></li>
+  <li><a href="Account.html">Sign up</a></li>
+</ul>
 
-			<!-- Forms -->
+		</nav>
 
-		<form method="post" action="Products.php">
-
+		</div>
+		<form method="post" >
 			<input type="text" name="srh" placeholder="Search" size="60" required>
-			<button name="srh-btn" class="btn"> GO </button>
-			
+			<button name="srh-btn"> GO </button>
 		</form>
 		
-		<form id="right" method="post" action="Products.php"> 
-
-			<input class="btn" type="submit" name="btn2" value="Get All Record From Data base">
-
-		</form>
-</div>
+	</div>
 </div>
 
-		<!-- Retreive -->
+
+
+<div class="small-container">
+	<?php
+//Retrieve_Products
+
+if (isset($_POST['srh-btn'])) {
+  ?>
+    <center>
+  <table>
 
 <?php
-if(isset($_POST['btn2'])){
-	?>
+$st=$_POST['srh'];
 
-	<center>
-		<table border=2 width=70%>
-			<tr>
-				<td >ID</td>
-				<td>Product Name</td>
-				<td>Price</td>
-				<td>Image</td>
-				<td>Update Data</td>
-				<td>Delete Data</td>
-			</tr>
-		<?php
-		$qry1="SELECT * FROM `products`";
-		$run=mysqli_query($con,$qry1);
+  $qry="SELECT * FROM `products` WHERE `pname` LIKE '%$st%' ";
+  $rst=mysqli_query($con,$qry);
+  while ($data=mysqli_fetch_array($rst)) {
+    //$data=array('ID'=>{2,5,6,7} 'pname'=>{iphonex,iphone 7plus});
 
-		while($data=mysqli_fetch_array($run)){
-			//$data=array('Id'=>{1,2,3,4...} 'Pname'=>{'x','o'....} 'color'=>{......})
-		?>
-			<tr>
-				<td><?php  echo $data['id']   ?></td>
-				<td><?php  echo $data['pname']   ?></td>
-				<td><?php  echo $data['price']   ?></td>
-				<td> <img src="<?php  echo $data['IMG']   ?>" width=100% ></td>
-				<td>  <a href="">Edit Data</a>  </td>
-				<td>  <a href="">Delete Data</a>  </td>
-			</tr>
-		<?php	
-		}
-		?>
-		</table>
-	</center>
-		<?php
+    ?>
+   <tr style="text-align: center; display: inline;">
+<td style=" width: 250px;">
+	<div class="row">
+		<div class="col-4">
+		<img src="<?php   echo $data['image']; ?>">
+		<h4><?php echo $data['pname'];  ?></h4>
+		<p> <?php echo $data['price']; ?></p>
+		</div>
+	</div>
+</td>
+</tr>
+
+    <?php
+  }
+  ?>
+<hr> 
+		<h2 class="title"> Searching Result </h2>
+
+<?php
+
 }
-		?>
-
-	<!-- Sreach -->
-<?php 
-
-if(isset($_POST['srh-btn'])){
-	$srh=mysqli_real_escape_string($con,$_POST['srh']);
 ?>
-	<center>
-		<table border=2 width=50%>
-			<tr>
-				<td >ID</th>
-				<td>Product Name</th>
-				<td>Price</th>
-				<td>Image</th>
-			</tr>
-		<?php
-			$qy="SELECT * FROM `products` WHERE `pname` LIKE '%$srh%'";
-			$res=mysqli_query($con,$qy);
+</table> 
+</center>
+<?php
+//Sorting_Results
 
-			while ($data1=mysqli_fetch_array($res)){
-		?>
-			<tr>
-			<td>  <?php  echo $data1['id']   ?>  </td>
-			<td>  <?php  echo $data1['pname']   ?>  </td>
-			<td>  <?php  echo $data1['price']   ?>  </td>
-			<td>  <img src="<?php  echo $data1['IMG']   ?>" width=100%>  </td>
-			</tr>
-		<?php
-			}
-		?>
-		</table>
-	</center>
-		<?php
-			}
-		?>
+if (isset($_POST['btn2'])) {
+  ?>
+<center>
+<table>
+<?php
+$opt=$_POST['sortt'];
+
+if ($opt=="l") {
+  
+$qy="SELECT * FROM `products` order by `price` ASC";
+$rt=mysqli_query($con,$qy);
+while ($row=mysqli_fetch_array($rt)) {
+  ?>
+  <tr style="text-align: center; display: inline;">
+<td style=" width: 250px;">
+	<div class="row">
+		<div class="col-4">
+		<img src="<?php   echo $row['image']; ?>">
+		<h4><?php echo $row['pname'];  ?></h4>
+		<p> <?php echo $row['price']; ?></p>
+		</div>
+	</div>
+</td>
+</tr>
+<?php
+
+}
+?>
+<hr> 
+		<h2 class="title"> Sorting Result </h2>
+
+<?php
+
+}else {
+  $qy="SELECT * FROM `products` order by `price` DESC";
+  $tt=mysqli_query($con,$qy);
+
+  while ($dt=mysqli_fetch_array($tt)) {
+  ?>
+  <tr style="text-align: center; display: inline;">
+<td style=" width: 250px;">
+	<div class="row">
+		<div class="col-4">
+		<img src="<?php   echo $dt['image']; ?>">
+		<h4><?php echo $dt['pname'];  ?></h4>
+		<p> <?php echo $dt['price']; ?></p>
+		</div>
+	</div>
+</td>
+</tr>
+<?php
+}
+?>
+		<h2 class="title"> Sorting Result </h2>
+
+<?php
+
+}
+}
+
+?>
+</table></center>
+<h2 class="title">All Products</h2>
+<form id="right" method="post"> <label> Sort By:</label>
+        <select  name="sortt" required>
+           <option> --Select One Option-- </option>
+           <option value="l"> Price: Low to High </option>
+           <option value="h"> Price: High to Low </option>
+        </select>
+        <input class="btn" type="submit" name="btn2" value="Sort Your Products">
+         </form>
+<div class="row">
+	<div class="col-4">
+		<img src="IMG/product-1.jpg">
+		<h4>Yellow Car</h4>
+		
+		<p>$50,000</p>
+	</div>
+	<div class="col-4">
+		<img src="IMG/Product-2.jpg">
+		<h4>White Car</h4>
+	
+		<p>$150,000</p>
+	</div>
+	<div class="col-4">
+		<img src="IMG/Product-3.jpg">
+		<h4>Red car</h4>
+	
+		<p>$100,000</p>
+	</div>
+	<div class="col-4">
+		<img src="IMG/Product-4.jpg">
+		<h4>Yellow Car</h4>
+	
+		<p>$75,000</p>
+	</div>
+</div>
+
+<div class="Footer">
+	<div class="container">
+		<div class="row">
+			
+			<div class="footer-col-3">
+				<h3>Useful Links</h3>
+				<li>Coupons</li>
+				<li>Blog Post</li>
+				<li>Return Poilcy</li>
+				<li>Coupons</li>
+			</div>
+			<div class="footer-col-4">
+				<h3>Follow US</h3>
+				<li>Facebook</li>
+				<li>YouTube</li>
+				<li>LinkedIN</li>
+			</div>
+		</div>
+		<hr> 
+		<p class="copy">Copyright 2022</p>
+	</div>
+	</div>
 
 </body>
 </html>
